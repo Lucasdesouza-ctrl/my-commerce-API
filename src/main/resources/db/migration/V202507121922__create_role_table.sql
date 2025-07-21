@@ -1,0 +1,5 @@
+CREATE TABLE tb_roles (
+
+    role_id BIGINT NOT NULL UNIQUE,
+    role_name VARCHAR(100) NOT NULL UNIQUE
+)

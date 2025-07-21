@@ -1,0 +1,2 @@
+ALTER TABLE users
+ADD COLUMN role VARCHAR(155) NOT NULL AFTER hash_password;
