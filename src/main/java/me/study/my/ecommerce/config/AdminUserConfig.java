@@ -11,6 +11,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.Set;
 
 
 @RequiredArgsConstructor
@@ -39,8 +40,11 @@ public class AdminUserConfig implements CommandLineRunner {
                     user.setName("Admin");
                     user.setPassword(encoder.encode("admin3216"));
                     user.setCpf("12312312312");
+                    user.setEmail("admin@gmail.com");
                     user.setBirthday(LocalDate.now());
-                    //user.set
+                    user.setRoles(Set.of(roleAdmin));
+
+                    userRepository.save(user);
                 }
         );
 

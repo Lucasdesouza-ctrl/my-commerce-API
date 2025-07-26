@@ -20,7 +20,7 @@ public class RoleEntity {
     @Getter
     public enum RolesEnum {
         ADMIN(1L),
-        USER(2L);
+        BASIC(2L);
 
         long roleId;
 

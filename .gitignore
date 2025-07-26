@@ -38,5 +38,4 @@ out/
 
 src/main/resources/app.key
 src/main/resources/application.properties
-src/main/resources/y
-src/main/resources/y.pub
+src/main/resources/app.pub
