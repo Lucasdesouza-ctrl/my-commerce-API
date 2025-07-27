@@ -3,6 +3,7 @@ package me.study.my.ecommerce.controller;
 import lombok.RequiredArgsConstructor;
 import me.study.my.ecommerce.dto.LoginRequest;
 import me.study.my.ecommerce.dto.LoginResponse;
+import me.study.my.ecommerce.entity.RoleEntity;
 import me.study.my.ecommerce.repository.UserRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.Instant;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @RestController
@@ -34,11 +36,17 @@ public class TokenController {
         var now = Instant.now();
         var expireIn = 300L;
 
+        var scopes = user.get().getRoles()
+                .stream()
+                .map(RoleEntity::getName)
+                .collect(Collectors.joining(" "));
+
         var claims = JwtClaimsSet.builder()
                 .issuer("backend")
                 .subject(user.get().getName())
                 .issuedAt(now)
                 .expiresAt(now.plusSeconds(expireIn))
+                .claim("scope", scopes)
                 .build();
 
         var jwtValue = jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();

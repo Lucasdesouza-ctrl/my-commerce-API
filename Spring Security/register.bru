@@ -1,0 +1,25 @@
+meta {
+  name: register
+  type: http
+  seq: 2
+}
+
+post {
+  url: http://localhost:8080/users/register
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "name":"Lucas Alexandre",
+    "email": "lucasAlexandre@gmail.com",
+    "password": "lucas3216",
+    "cpf": "32132132131",
+    "birthday":"2003-02-19"
+  }
+}
+
+settings {
+  encodeUrl: true
+}
