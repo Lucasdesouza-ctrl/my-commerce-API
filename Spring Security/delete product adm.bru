@@ -1,0 +1,23 @@
+meta {
+  name: delete product adm
+  type: http
+  seq: 8
+}
+
+delete {
+  url: http://localhost:8080/product/638e8ce8-0e41-4f4b-bc9a-d1be1c2c16f9
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{accessToken}}
+}
+
+vars:pre-request {
+  idProduct: res.body.id
+}
+
+settings {
+  encodeUrl: true
+}

@@ -1,0 +1,25 @@
+meta {
+  name: find all adm
+  type: http
+  seq: 7
+}
+
+get {
+  url: http://localhost:8080/product/adminP
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{accessToken}}
+}
+
+body:json {
+  {
+    "id":""
+  }
+}
+
+settings {
+  encodeUrl: true
+}

@@ -1,0 +1,28 @@
+meta {
+  name: catalogue
+  type: http
+  seq: 6
+}
+
+get {
+  url: http://localhost:8080/product/catalogue
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{accessToken}}
+}
+
+body:json {
+  {
+    "name":"nome",
+    "description":"descrição",
+    "price":200.00,
+    "quantity":4
+  }
+}
+
+settings {
+  encodeUrl: true
+}
