@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import me.study.my.ecommerce.dto.UserCreateDTO;
 import me.study.my.ecommerce.dto.UserDTO;
 import me.study.my.ecommerce.dto.UserMapper;
-import me.study.my.ecommerce.entity.CartItemEntity;
 import me.study.my.ecommerce.entity.RoleEntity;
 import me.study.my.ecommerce.entity.ShoppingCartEntity;
 import me.study.my.ecommerce.entity.UserEntity;
