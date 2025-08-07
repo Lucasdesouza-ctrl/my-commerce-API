@@ -4,6 +4,10 @@ jwt.private.key=classpath:your private key
 spring.sql.init.mode=always
 spring.jpa.defer-datasource-initialization=true
 
+admin.password=password
+admin.cpf=12345678901
+admin.email=email@email.com
+
 spring.jpa.hibernate.ddl-auto=update
 spring.jpa.show-sql=true
 spring.application.name=my.ecommerce
