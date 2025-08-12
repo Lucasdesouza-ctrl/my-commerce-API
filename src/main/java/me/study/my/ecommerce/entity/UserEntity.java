@@ -47,6 +47,9 @@ public class UserEntity {
     @Column(name = "birthday")
     private LocalDate birthday;
 
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private ShoppingCartEntity shoppingCart;
+
 
     public Boolean isLoginCorrect(LoginRequest loginRequest,
                                   PasswordEncoder passwordEncoder) {
