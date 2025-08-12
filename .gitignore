@@ -36,7 +36,6 @@ out/
 ### VS Code ###
 .vscode/
 
-src/main/resources/app.key
+src/main/resources/keys/*
 src/main/resources/application.properties
-src/main/resources/app.pub
 Spring Security
