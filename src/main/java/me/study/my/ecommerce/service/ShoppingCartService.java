@@ -1,18 +1,21 @@
 package me.study.my.ecommerce.service;
 
 import lombok.RequiredArgsConstructor;
-import me.study.my.ecommerce.dto.ProductDTO;
+import me.study.my.ecommerce.dto.CartItemDTO;
+import me.study.my.ecommerce.dto.CartMapper;
+import me.study.my.ecommerce.dto.CartResponseDTO;
+import me.study.my.ecommerce.dto.ItemMapper;
 import me.study.my.ecommerce.entity.CartItemEntity;
 import me.study.my.ecommerce.entity.ProductEntity;
 import me.study.my.ecommerce.entity.ShoppingCartEntity;
 import me.study.my.ecommerce.entity.UserEntity;
-import me.study.my.ecommerce.repository.CartItemRepository;
 import me.study.my.ecommerce.repository.ProductRepository;
 import me.study.my.ecommerce.repository.ShoppingCartRepository;
 import me.study.my.ecommerce.repository.UserRepository;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -21,15 +24,31 @@ import java.util.UUID;
 public class ShoppingCartService {
 
     private final ShoppingCartRepository cartRepository;
-    private final CartItemRepository itemRepository;
+    private final ItemMapper itemMapper;
     private final UserRepository userRepository;
     private final ProductRepository productRepository;
+    private final CartMapper cartMapper;
 
     public CartResponseDTO addProductToCart (UUID productId, int quantity){
 
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        String email = SecurityContextHolder
+                .getContext()
+                .getAuthentication()
+                .getName();
         UserEntity user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
+
+        ProductEntity product = productRepository.findById(productId)
+                .orElseThrow(() -> new RuntimeException("Product not found."));
+
+        if(product.getQuantity() < quantity){
+            throw new RuntimeException("Product quantity is not valid.");
+        }
+        if(product.getQuantity() == 0){
+            throw new RuntimeException("Product quantity is not valid.");
+        }
+
+
 
         var cart = user.getShoppingCart();
 
@@ -44,11 +63,11 @@ public class ShoppingCartService {
                 .findFirst();
 
         if (existingItem.isPresent()) {
+
             CartItemEntity item = existingItem.get();
             item.setQuantity(item.getQuantity() + quantity);
         } else {
-            ProductEntity product = productRepository.findById(productId)
-                    .orElseThrow(() -> new RuntimeException("Product not found"));
+
 
             CartItemEntity newItem = new CartItemEntity();
             newItem.setProduct(product);
@@ -60,9 +79,71 @@ public class ShoppingCartService {
 
         cartRepository.save(cart);
 
+        CartResponseDTO cartResponse = cartMapper.toDTO(cart);
 
-
-        return cart;
+        return  cartResponse;
     }
+
+    public List<CartItemDTO> getItensInCart (){
+        String email = SecurityContextHolder
+                .getContext()
+                .getAuthentication()
+                .getName();
+
+        UserEntity user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found") );
+
+        var cart = user.getShoppingCart();
+
+        return cart.getItens().stream().map(itemMapper::toDTO).toList();
+    }
+
+    public void deleteItemInCart (UUID itemId){
+
+        String email = SecurityContextHolder
+                .getContext()
+                .getAuthentication()
+                .getName();
+        UserEntity user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        var cart = user.getShoppingCart();
+
+        CartItemEntity itemToDelete = cart.getItens().stream()
+                .filter(i -> i.getProduct().getId().equals(itemId))
+                .findFirst().orElseThrow(() -> new RuntimeException("Item not found in cart"));
+
+           cart.getItens().remove(itemToDelete);
+
+           cartRepository.save(cart);
+    }
+
+    public void updateQuantity(UUID itemId, int newQuantity){
+
+        if (newQuantity <= 0){
+            throw new RuntimeException("New quantity invalid");
+        }
+
+        String email = SecurityContextHolder
+                .getContext()
+                .getAuthentication()
+                .getName();
+        UserEntity user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        ShoppingCartEntity  cart = user.getShoppingCart();
+
+        CartItemEntity itemToUpdate = cart.getItens().stream()
+                .filter(i -> i.getProduct().getId().equals(itemId))
+                .findFirst().orElseThrow(() -> new RuntimeException("Item not found in cart"));
+
+
+        itemToUpdate.setQuantity(newQuantity);
+
+        cartRepository.save(cart);
+    }
+
+
+
 
 }
