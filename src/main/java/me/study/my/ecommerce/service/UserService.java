@@ -39,8 +39,10 @@ public class UserService {
         return userMapper.toDTO(saved);
     }
 
-    public List<UserEntity> findAll() {
+    public List<UserDTO> findAll() {
 
-        return userRepository.findAll();
+        return userRepository
+                 .findAll().stream().map(userMapper::toDTO)
+                 .toList();
     }
 }

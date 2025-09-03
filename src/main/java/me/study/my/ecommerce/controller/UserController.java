@@ -33,7 +33,7 @@ public class UserController {
 
     @GetMapping
     @PreAuthorize("hasAuthority('SCOPE_admin')")
-    public ResponseEntity<List<UserEntity>> findAll(){
+    public ResponseEntity<List<UserDTO>> findAll(){
         var response = service.findAll();
 
         return ResponseEntity.ok(response);

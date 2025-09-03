@@ -1,7 +1,6 @@
 package me.study.my.ecommerce.service;
 
 import lombok.RequiredArgsConstructor;
-import me.study.my.ecommerce.dto.CartItemDTO;
 import me.study.my.ecommerce.dto.CartMapper;
 import me.study.my.ecommerce.dto.CartResponseDTO;
 import me.study.my.ecommerce.dto.ItemMapper;
@@ -15,7 +14,6 @@ import me.study.my.ecommerce.repository.UserRepository;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -73,18 +71,20 @@ public class ShoppingCartService {
             newItem.setProduct(product);
             newItem.setQuantity(quantity);
             newItem.setCart(cart);
+            newItem.setUnitPrice(product.getPrice());
 
             cart.getItens().add(newItem);
         }
 
         cartRepository.save(cart);
 
+        cart.getItens().size();
         CartResponseDTO cartResponse = cartMapper.toDTO(cart);
 
         return  cartResponse;
     }
 
-    public List<CartItemDTO> getItensInCart (){
+    public CartResponseDTO getItemsInCart (){
         String email = SecurityContextHolder
                 .getContext()
                 .getAuthentication()
@@ -95,10 +95,12 @@ public class ShoppingCartService {
 
         var cart = user.getShoppingCart();
 
-        return cart.getItens().stream().map(itemMapper::toDTO).toList();
+        CartResponseDTO cartResponse = cartMapper.toDTO(cart);
+
+        return cartResponse;
     }
 
-    public void deleteItemInCart (UUID itemId){
+    public CartResponseDTO deleteItemInCart (UUID itemId){
 
         String email = SecurityContextHolder
                 .getContext()
@@ -110,15 +112,19 @@ public class ShoppingCartService {
         var cart = user.getShoppingCart();
 
         CartItemEntity itemToDelete = cart.getItens().stream()
-                .filter(i -> i.getProduct().getId().equals(itemId))
+                .filter(i -> i.getId().equals(itemId))
                 .findFirst().orElseThrow(() -> new RuntimeException("Item not found in cart"));
 
            cart.getItens().remove(itemToDelete);
 
            cartRepository.save(cart);
+
+           CartResponseDTO cartResponse = cartMapper.toDTO(cart);
+
+           return cartResponse;
     }
 
-    public void updateQuantity(UUID itemId, int newQuantity){
+    public CartResponseDTO updateQuantity(UUID itemId, int newQuantity){
 
         if (newQuantity <= 0){
             throw new RuntimeException("New quantity invalid");
@@ -134,13 +140,17 @@ public class ShoppingCartService {
         ShoppingCartEntity  cart = user.getShoppingCart();
 
         CartItemEntity itemToUpdate = cart.getItens().stream()
-                .filter(i -> i.getProduct().getId().equals(itemId))
+                .filter(i -> i.getId().equals(itemId))
                 .findFirst().orElseThrow(() -> new RuntimeException("Item not found in cart"));
 
 
         itemToUpdate.setQuantity(newQuantity);
 
         cartRepository.save(cart);
+
+        CartResponseDTO cartResponse = cartMapper.toDTO(cart);
+
+        return cartResponse;
     }
 
 

@@ -2,16 +2,10 @@ package me.study.my.ecommerce.controller;
 
 import lombok.RequiredArgsConstructor;
 
-import me.study.my.ecommerce.dto.CartItemDTO;
 import me.study.my.ecommerce.dto.CartResponseDTO;
-import me.study.my.ecommerce.dto.ItemMapper;
 import me.study.my.ecommerce.service.ShoppingCartService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
@@ -22,10 +16,7 @@ public class CartController {
 
     private final ShoppingCartService cartService;
 
-    private final ItemMapper mapper;
-
-    @PostMapping
-    @PreAuthorize("hasAuthority('SCOPE_basic')")
+    @PostMapping("{productId}/{quantity}")
     public ResponseEntity<CartResponseDTO> addItemInCart(
             @PathVariable UUID productId
             , @PathVariable int quantity
@@ -33,5 +24,33 @@ public class CartController {
       CartResponseDTO addItem = cartService.addProductToCart(productId, quantity);
 
         return ResponseEntity.ok(addItem);
+    }
+
+    @GetMapping
+    public ResponseEntity<CartResponseDTO> getItemsInCart (){
+
+        CartResponseDTO getItems = cartService.getItemsInCart();
+        return ResponseEntity.ok(getItems);
+    }
+
+
+    @DeleteMapping("{itemId}")
+    public ResponseEntity <CartResponseDTO> deleteItemInCart (@PathVariable UUID itemId){
+
+        CartResponseDTO cartResponse = cartService.deleteItemInCart(itemId);
+
+        return ResponseEntity.ok(cartResponse);
+
+    }
+
+    @PutMapping("{itemId}/{quantity}")
+    public ResponseEntity <CartResponseDTO> updateItemQuantity (
+            @PathVariable UUID itemId,
+            @PathVariable int quantity){
+
+        CartResponseDTO cartResponse = cartService.updateQuantity(itemId, quantity);
+
+        return  ResponseEntity.ok(cartResponse);
+
     }
 }

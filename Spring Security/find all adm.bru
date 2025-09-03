@@ -5,19 +5,13 @@ meta {
 }
 
 get {
-  url: http://localhost:8080/product/adminP
+  url: http://localhost:9001/product/adminP
   body: json
   auth: bearer
 }
 
 auth:bearer {
   token: {{accessToken}}
-}
-
-body:json {
-  {
-    "id":""
-  }
 }
 
 settings {
