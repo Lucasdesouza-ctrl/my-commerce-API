@@ -13,8 +13,8 @@ import java.util.UUID;
 @Setter
 @Table(name = "tb_CartItem")
 public class CartItemEntity {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
     @ManyToOne

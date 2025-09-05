@@ -5,7 +5,6 @@ import lombok.RequiredArgsConstructor;
 import me.study.my.ecommerce.dto.ProductAdmDTO;
 import me.study.my.ecommerce.dto.ProductDTO;
 import me.study.my.ecommerce.dto.ProductMapper;
-import me.study.my.ecommerce.entity.ProductEntity;
 import me.study.my.ecommerce.service.ProductService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;

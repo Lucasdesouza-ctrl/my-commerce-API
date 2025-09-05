@@ -68,6 +68,7 @@ public class ShoppingCartService {
 
 
             CartItemEntity newItem = new CartItemEntity();
+            newItem.setId(product.getId());
             newItem.setProduct(product);
             newItem.setQuantity(quantity);
             newItem.setCart(cart);
