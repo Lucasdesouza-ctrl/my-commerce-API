@@ -18,39 +18,36 @@ public class CartController {
 
     @PostMapping("{productId}/{quantity}")
     public ResponseEntity<CartResponseDTO> addItemInCart(
-            @PathVariable UUID productId
-            , @PathVariable int quantity
+            @PathVariable UUID productId,
+            @PathVariable int quantity
     ) {
-      CartResponseDTO addItem = cartService.addProductToCart(productId, quantity);
+        CartResponseDTO addItem = cartService.addProductToCart(productId, quantity);
 
         return ResponseEntity.ok(addItem);
     }
 
     @GetMapping
-    public ResponseEntity<CartResponseDTO> getItemsInCart (){
+    public ResponseEntity<CartResponseDTO> getItemsInCart() {
+        var items = cartService.getItemsInCart();
 
-        CartResponseDTO getItems = cartService.getItemsInCart();
-        return ResponseEntity.ok(getItems);
+        return ResponseEntity.ok(items);
     }
 
 
     @DeleteMapping("{itemId}")
-    public ResponseEntity <CartResponseDTO> deleteItemInCart (@PathVariable UUID itemId){
-
+    public ResponseEntity<CartResponseDTO> deleteItemInCart(@PathVariable UUID itemId) {
         CartResponseDTO cartResponse = cartService.deleteItemInCart(itemId);
 
         return ResponseEntity.ok(cartResponse);
-
     }
 
     @PutMapping("{itemId}/{quantity}")
-    public ResponseEntity <CartResponseDTO> updateItemQuantity (
+    public ResponseEntity<CartResponseDTO> updateItemQuantity(
             @PathVariable UUID itemId,
-            @PathVariable int quantity){
-
+            @PathVariable int quantity
+    ) {
         CartResponseDTO cartResponse = cartService.updateQuantity(itemId, quantity);
 
-        return  ResponseEntity.ok(cartResponse);
-
+        return ResponseEntity.ok(cartResponse);
     }
 }
