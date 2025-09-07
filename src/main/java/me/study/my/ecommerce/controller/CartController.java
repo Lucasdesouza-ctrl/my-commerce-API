@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 
 import me.study.my.ecommerce.dto.CartResponseDTO;
 import me.study.my.ecommerce.service.ShoppingCartService;
+import org.springframework.boot.autoconfigure.graphql.GraphQlProperties;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
