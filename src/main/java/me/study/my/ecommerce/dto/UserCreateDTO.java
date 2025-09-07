@@ -12,13 +12,11 @@ import java.time.LocalDate;
 @Setter
 public class UserCreateDTO {
     private String name;
-
-
+    
     @Email
     private String email;
 
     private String password;
-
 
     private String cpf;
 
