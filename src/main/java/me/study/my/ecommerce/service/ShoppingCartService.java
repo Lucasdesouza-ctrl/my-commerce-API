@@ -7,6 +7,7 @@ import me.study.my.ecommerce.entity.CartItemEntity;
 import me.study.my.ecommerce.entity.ProductEntity;
 import me.study.my.ecommerce.entity.ShoppingCartEntity;
 import me.study.my.ecommerce.entity.UserEntity;
+import me.study.my.ecommerce.exception.ResourceNotFoundException;
 import me.study.my.ecommerce.repository.ProductRepository;
 import me.study.my.ecommerce.repository.ShoppingCartRepository;
 import me.study.my.ecommerce.repository.UserRepository;
@@ -138,7 +139,7 @@ public class ShoppingCartService {
                 .getAuthentication()
                 .getName();
         UserEntity user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
         return user;
     }
