@@ -5,9 +5,13 @@ meta {
 }
 
 delete {
-  url: http://localhost:9001/product/2dcae2c5-a4a7-4a6b-83ca-2107dd6f2656
+  url: {{server}}/product/:id
   body: json
   auth: bearer
+}
+
+params:path {
+  id: 2dcae2c5-a4a7-4a6b-83ca-2107dd6f2656
 }
 
 auth:bearer {
