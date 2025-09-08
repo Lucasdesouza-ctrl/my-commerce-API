@@ -11,15 +11,19 @@ import me.study.my.ecommerce.exception.ResourceNotFoundException;
 import me.study.my.ecommerce.repository.ProductRepository;
 import me.study.my.ecommerce.repository.ShoppingCartRepository;
 import me.study.my.ecommerce.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.security.interfaces.RSAPrivateKey;
 import java.util.Optional;
 import java.util.UUID;
 
 @RequiredArgsConstructor
 @Service
 public class ShoppingCartService {
+    @Value("${admin.email}")
+    private String ADMIN_EMAIL;
 
     private final ShoppingCartRepository cartRepository;
     private final UserRepository userRepository;
@@ -27,8 +31,7 @@ public class ShoppingCartService {
     private final CartMapper cartMapper;
 
     public CartResponseDTO addProductToCart(UUID productId, int quantity) {
-
-        UserEntity user = currentUser();
+        var user = currentUser();
 
         ProductEntity product = productRepository.findById(productId)
                 .orElseThrow(() -> new RuntimeException("Product not found."));
@@ -49,17 +52,15 @@ public class ShoppingCartService {
 
             cartRepository.save(cart);
         }
+
         Optional<CartItemEntity> existingItem = cart.getItens().stream()
                 .filter(i -> i.getProduct().getId().equals(productId))
                 .findFirst();
 
         if (existingItem.isPresent()) {
-
             CartItemEntity item = existingItem.get();
             item.setQuantity(item.getQuantity() + quantity);
         } else {
-
-
             CartItemEntity newItem = new CartItemEntity();
             newItem.setId(product.getId());
             newItem.setProduct(product);
@@ -71,78 +72,58 @@ public class ShoppingCartService {
         }
 
         cartRepository.save(cart);
-
-        cart.getItens().size();
-        CartResponseDTO cartResponse = cartMapper.toDTO(cart);
-
-        return cartResponse;
+        return cartMapper.toDTO(cart);
     }
 
     public CartResponseDTO getItemsInCart() {
-
-        UserEntity user = currentUser();
+        var user = currentUser();
 
         var cart = user.getShoppingCart();
-
-        CartResponseDTO cartResponse = cartMapper.toDTO(cart);
-
-        return cartResponse;
+        return cartMapper.toDTO(cart);
     }
 
     public CartResponseDTO deleteItemInCart(UUID itemId) {
-
-        UserEntity user = currentUser();
-
+        var user = currentUser();
         var cart = user.getShoppingCart();
 
-        CartItemEntity itemToDelete = cart.getItens().stream()
-                .filter(i -> i.getId().equals(itemId))
-                .findFirst().orElseThrow(() -> new RuntimeException("Item not found in cart"));
-
+        CartItemEntity itemToDelete = getItemInCart(itemId, cart);
         cart.getItens().remove(itemToDelete);
 
         cartRepository.save(cart);
-
-        CartResponseDTO cartResponse = cartMapper.toDTO(cart);
-
-        return cartResponse;
+        return cartMapper.toDTO(cart);
     }
 
     public CartResponseDTO updateQuantity(UUID itemId, int newQuantity) {
+        if (newQuantity <= 0) throw new RuntimeException("New quantity invalid");
 
-        if (newQuantity <= 0) {
-            throw new RuntimeException("New quantity invalid");
-        }
+        var user = currentUser();
+        var cart = user.getShoppingCart();
 
-        UserEntity user = currentUser();
-
-        ShoppingCartEntity cart = user.getShoppingCart();
-
-        CartItemEntity itemToUpdate = cart.getItens().stream()
-                .filter(i -> i.getId().equals(itemId))
-                .findFirst().orElseThrow(() -> new RuntimeException("Item not found in cart"));
-
-
+        var itemToUpdate = getItemInCart(itemId, cart);
         itemToUpdate.setQuantity(newQuantity);
 
         cartRepository.save(cart);
-
-        CartResponseDTO cartResponse = cartMapper.toDTO(cart);
-
-        return cartResponse;
+        return cartMapper.toDTO(cart);
     }
 
-    public UserEntity currentUser() {
-
+    private UserEntity currentUser() {
         String email = SecurityContextHolder
                 .getContext()
                 .getAuthentication()
                 .getName();
-        UserEntity user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
-        return user;
+        if (email.equals(ADMIN_EMAIL)) {
+            throw new RuntimeException("Admin user are not able to have a Cart.");
+        }
+
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
     }
 
+    private CartItemEntity getItemInCart(UUID itemId, ShoppingCartEntity cart) {
+        return cart.getItens().stream()
+                .filter(i -> i.getId().equals(itemId))
+                .findFirst().orElseThrow(() -> new RuntimeException("Item not found in cart"));
+    }
 
 }
