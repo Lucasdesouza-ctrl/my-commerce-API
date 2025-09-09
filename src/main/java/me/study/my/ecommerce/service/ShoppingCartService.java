@@ -120,7 +120,7 @@ public class ShoppingCartService {
 
         CartItemEntity itemToUpdate = cart.getItens().stream()
                 .filter(i -> i.getId().equals(itemId))
-                .findFirst().orElseThrow(() -> new RuntimeException("Item not found in cart"));
+                .findFirst().orElseThrow(() -> new ResourceNotFoundException("Item not found in cart"));
 
 
         itemToUpdate.setQuantity(newQuantity);

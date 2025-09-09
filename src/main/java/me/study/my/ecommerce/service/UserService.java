@@ -1,5 +1,6 @@
 package me.study.my.ecommerce.service;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import me.study.my.ecommerce.dto.UserCreateDTO;
 import me.study.my.ecommerce.dto.UserDTO;
@@ -25,7 +26,7 @@ public class UserService {
     private final RoleRepository roleRepository;
     private final ShoppingCartRepository cartRepository;
 
-    public UserDTO createUser(UserCreateDTO userDTO) {
+    public UserDTO createUser(@Valid UserCreateDTO userDTO) {
         var basicRole = roleRepository.findByName(RoleEntity.RolesEnum.BASIC.name());
 
         UserEntity user = userMapper.toEntity(userDTO);

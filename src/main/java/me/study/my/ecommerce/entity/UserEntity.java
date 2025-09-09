@@ -53,6 +53,8 @@ public class UserEntity {
     private ShoppingCartEntity shoppingCart;
 
 
+
+
     public Boolean isLoginCorrect(LoginRequest loginRequest,
                                   PasswordEncoder passwordEncoder) {
 
