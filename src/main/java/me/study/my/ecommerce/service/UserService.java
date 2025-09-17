@@ -28,7 +28,6 @@ public class UserService {
 
     public UserDTO createUser(@Valid UserCreateDTO userDTO) {
         var basicRole = roleRepository.findByName(RoleEntity.RolesEnum.BASIC.name());
-
         UserEntity user = userMapper.toEntity(userDTO);
         user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
         user.setRoles(Set.of(basicRole));
