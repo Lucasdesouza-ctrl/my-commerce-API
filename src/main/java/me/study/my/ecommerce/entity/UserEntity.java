@@ -1,6 +1,7 @@
 package me.study.my.ecommerce.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -48,7 +49,10 @@ public class UserEntity {
     private LocalDate birthday;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private ShoppingCartEntity shoppingCart;
+
+
 
 
     public Boolean isLoginCorrect(LoginRequest loginRequest,

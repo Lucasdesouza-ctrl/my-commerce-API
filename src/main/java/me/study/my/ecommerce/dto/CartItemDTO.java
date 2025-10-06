@@ -1,7 +1,11 @@
 package me.study.my.ecommerce.dto;
 
-public record CartItemDTO(String productName,
-                          double unitPrice,
-                          int quantity,
-                          double totalItemPrice) {
+import java.util.UUID;
+
+public record CartItemDTO(
+        UUID id,
+        String productName,
+        double unitPrice,
+        int quantity
+) {
 }

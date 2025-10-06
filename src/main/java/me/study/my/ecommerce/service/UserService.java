@@ -1,5 +1,6 @@
 package me.study.my.ecommerce.service;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import me.study.my.ecommerce.dto.UserCreateDTO;
 import me.study.my.ecommerce.dto.UserDTO;
@@ -25,9 +26,8 @@ public class UserService {
     private final RoleRepository roleRepository;
     private final ShoppingCartRepository cartRepository;
 
-    public UserDTO createUser(UserCreateDTO userDTO) {
+    public UserDTO createUser(@Valid UserCreateDTO userDTO) {
         var basicRole = roleRepository.findByName(RoleEntity.RolesEnum.BASIC.name());
-
         UserEntity user = userMapper.toEntity(userDTO);
         user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
         user.setRoles(Set.of(basicRole));
@@ -39,8 +39,10 @@ public class UserService {
         return userMapper.toDTO(saved);
     }
 
-    public List<UserEntity> findAll() {
+    public List<UserDTO> findAll() {
 
-        return userRepository.findAll();
+        return userRepository
+                 .findAll().stream().map(userMapper::toDTO)
+                 .toList();
     }
 }

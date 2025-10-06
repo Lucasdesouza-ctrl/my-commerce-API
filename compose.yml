@@ -2,7 +2,7 @@ services:
   mysql:
     image: mysql:5.7
     ports:
-      - "3306:3306"
+      - "3307:3306"
     environment:
       MYSQL_DATABASE: ecommerce
       MYSQL_ROOT_PASSWORD: admin

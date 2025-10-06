@@ -5,9 +5,6 @@ import lombok.RequiredArgsConstructor;
 import me.study.my.ecommerce.dto.UserCreateDTO;
 import me.study.my.ecommerce.dto.UserDTO;
 import me.study.my.ecommerce.dto.UserMapper;
-import me.study.my.ecommerce.entity.RoleEntity;
-import me.study.my.ecommerce.entity.UserEntity;
-import me.study.my.ecommerce.repository.RoleRepository;
 import me.study.my.ecommerce.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -33,7 +30,7 @@ public class UserController {
 
     @GetMapping
     @PreAuthorize("hasAuthority('SCOPE_admin')")
-    public ResponseEntity<List<UserEntity>> findAll(){
+    public ResponseEntity<List<UserDTO>> findAll(){
         var response = service.findAll();
 
         return ResponseEntity.ok(response);
