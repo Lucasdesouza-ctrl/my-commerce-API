@@ -15,7 +15,7 @@ services:
       dockerfile: Dockerfile
     container_name: ecommerce-api
     ports:
-      - "9001:8080"
+      - "8080:8080"
     depends_on:
       - mysql
     environment:
