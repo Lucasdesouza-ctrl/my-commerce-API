@@ -31,9 +31,20 @@ public class GlobalExceptionHandler {
                 error.getMessage(),
                 "Unauthorized",
                 LocalDateTime.now()
-        ) {
-        };
+        ) ;
         return new ResponseEntity<>(errorResponse, HttpStatus.UNAUTHORIZED);
     }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ErrorResponse> handleResponseIllegalArgumentException (IllegalArgumentException error){
+        ErrorResponse errorResponse = new ErrorResponse(
+                400,
+                error.getMessage(),
+                "Illegal argument",
+                LocalDateTime.now()
+        );
+                return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
+
 
 }
